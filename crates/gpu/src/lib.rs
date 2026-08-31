@@ -6,7 +6,7 @@ pub mod kernel;
 pub mod pointwise;
 pub mod runtime;
 
-#[cfg(any(feature = "cuda", feature = "rocm", feature = "metal"))]
+#[cfg(any(feature = "cpu", feature = "cuda", feature = "rocm", feature = "metal"))]
 #[cfg(test)]
 mod tests {
     use bullet_compiler::{
@@ -96,6 +96,16 @@ mod tests {
         );
 
         Ok(())
+    }
+
+    #[cfg(feature = "cpu")]
+    mod cpu {
+        use crate::runtime::cpu::{Cpu, CpuError};
+
+        #[test]
+        fn axby() -> Result<(), CpuError> {
+            super::axby::<Cpu>()
+        }
     }
 
     #[cfg(feature = "cuda")]

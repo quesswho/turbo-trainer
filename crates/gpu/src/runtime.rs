@@ -1,6 +1,8 @@
 //! Minimal runtime around CUDA/ROCm devices
 
 mod bindings;
+#[cfg(feature = "cpu")]
+pub mod cpu;
 #[cfg(feature = "cuda")]
 pub mod cuda;
 #[cfg(feature = "metal")]
@@ -453,7 +455,7 @@ impl<G: Gpu> Blas<G> {
     }
 }
 
-#[cfg(any(feature = "cuda", feature = "rocm", feature = "metal"))]
+#[cfg(any(feature = "cpu", feature = "cuda", feature = "rocm", feature = "metal"))]
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -547,6 +549,16 @@ mod tests {
         }
 
         Ok(())
+    }
+
+    #[cfg(feature = "cpu")]
+    mod cpu {
+        use crate::runtime::cpu::{Cpu, CpuError};
+
+        #[test]
+        fn create_malloc_copy_sync_drop() -> Result<(), CpuError> {
+            super::create_malloc_copy_sync_drop::<Cpu>()
+        }
     }
 
     #[cfg(feature = "cuda")]

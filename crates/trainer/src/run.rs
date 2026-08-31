@@ -19,13 +19,16 @@ use bullet_gpu::{
 
 use crate::optimiser::{Optimiser, OptimiserState};
 
-#[cfg(not(any(feature = "cuda", feature = "rocm")))]
+#[cfg(not(any(feature = "cpu", feature = "cuda", feature = "rocm")))]
 pub type DefaultDevice = Device<runtime::mock::MockGpu>;
 
-#[cfg(feature = "cuda")]
+#[cfg(feature = "cpu")]
+pub type DefaultDevice = Device<runtime::cpu::Cpu>;
+
+#[cfg(all(feature = "cuda", not(feature = "cpu")))]
 pub type DefaultDevice = Device<runtime::cuda::Cuda>;
 
-#[cfg(all(feature = "rocm", not(feature = "cuda")))]
+#[cfg(all(feature = "rocm", not(any(feature = "cpu", feature = "cuda"))))]
 pub type DefaultDevice = Device<runtime::rocm::ROCm>;
 
 #[derive(Debug)]
