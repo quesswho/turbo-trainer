@@ -302,7 +302,7 @@ impl<G: Gpu> BufferGuard<G> {
     }
 }
 
-#[cfg(any(feature = "cuda", feature = "rocm", feature = "metal"))]
+#[cfg(any(feature = "cpu", feature = "cuda", feature = "rocm", feature = "metal"))]
 #[cfg(test)]
 mod tests {
     use crate::runtime::Device;
@@ -320,6 +320,16 @@ mod tests {
         assert_eq!(host_src, host_dst);
 
         Ok(())
+    }
+
+    #[cfg(feature = "cpu")]
+    mod cpu {
+        use crate::runtime::cpu::{Cpu, CpuError};
+
+        #[test]
+        fn from_to_host() -> Result<(), CpuError> {
+            super::from_to_host::<Cpu>()
+        }
     }
 
     #[cfg(feature = "cuda")]

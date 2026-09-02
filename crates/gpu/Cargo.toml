@@ -19,6 +19,7 @@ objc2-foundation = { version = "0.3.2", optional = true, default-features = fals
 objc2-metal-performance-shaders = { version = "0.3.2", optional = true, default-features = false, features = ["MPSCore", "MPSCoreTypes", "MPSKernel", "MPSMatrix", "MPSMatrixMultiplication"] }
 
 [features]
+cpu = []
 cuda = []
 rocm = []
 metal = ["dep:objc2-metal", "dep:objc2", "dep:objc2-foundation", "dep:objc2-metal-performance-shaders"]
